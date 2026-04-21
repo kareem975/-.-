@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play - تحميل الألعاب</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a1a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .neon-glow {
+            box-shadow: 
+                0 0 5px #00d4ff,
+                0 0 10px #00d4ff,
+                0 0 20px #00d4ff,
+                0 0 40px #ff00ff,
+                inset 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        .neon-text {
+            background: linear-gradient(45deg, #00d4ff, #ff00ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            font-weight: 700;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.95), rgba(20, 0, 40, 0.95));
+            padding: 25px 0;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-bottom: 3px solid transparent;
+            background: linear-gradient(90deg, transparent, #00d4ff, #ff00ff, transparent);
+            background-size: 200% 100%;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        /* Stats Panel - للمدير بس */
+        .stats-panel {
+            background: rgba(0, 255, 136, 0.15);
+            border: 2px solid #00ff88;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-panel::before {
+            content: '👑 مدير فقط';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 0.9rem;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .stat-item {
+            background: rgba(20, 20, 50, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            gap: 30px;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #00ff88;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-radius: 12px;
+            background: rgba(20, 20, 40, 0.8);
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2);
+        }
+
+        button {
+            background: linear-gradient(45deg, #00d4ff, #ff00ff);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            background: rgba(10, 10, 26, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 35px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: rgba(20, 20, 50, 0.8);
+            border-radius: 20px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #00d4ff;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        /* Delete Button */
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            z-index: 10;
+        }
+
+        .admin .delete-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.95), rgba(20, 0, 40, 0.95));
+            margin-top: 50px;
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 3px solid transparent;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            border-top: 3px solid transparent;
+            background: linear-gradient(90deg, transparent, #00d4ff, #ff00ff, transparent);
+            background-size: 200% 100%;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .container { grid-template-columns: 1fr; gap: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 2.2rem; }
+            .stats-panel { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header neon-glow">
+        <div class="logo neon-text">🎮 Play</div>
+        <p style="color: #aaa; font-size: 1.2rem;">أفضل الألعاب مجاناً للكمبيوتر</p>
+    </header>
+
+    <div class="container">
+        <!-- الشريط الجانبي الأيمن -->
+        <aside class="sidebar" id="rightSidebar">
+            <!-- الإحصائيات (مدير فقط) -->
+            <div id="adminStats" style="display: none;">
+                <h3 style="color: #00ff88;">📊 إحصائيات الموقع</h3>
+                <div class="stats-panel" id="siteStats">
+                    <!-- الإحصائيات هتظهر هنا -->
+                </div>
+            </div>
+            
+            <!-- الإعلانات العادية -->
+            <h3 style="color: #00d4ff;">🏪 الإعلانات</h3>
+            <div id="adsContainer"></div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- البحث -->
+            <div style="margin-bottom: 30px;">
+                <input type="text" id="searchInput" placeholder="🔍 ابحث عن لعبتك المفضلة..." 
+                       style="width: 100%; padding: 18px 25px; font-size: 16px;" onkeyup="searchGames()">
+            </div>
+
+            <!-- تسجيل الدخول -->
+            <div id="loginSection">
+                <div style="background: rgba(20, 20, 50, 0.9); padding: 30px; border-radius: 20px; border: 2px solid rgba(0, 212, 255, 0.4);">
+                    <h3 class="neon-text" style="text-align: center; margin-bottom: 25px;">🔐 تسجيل الدخول</h3>
+                    <div class="form-group">
+                        <label>اسم المستخدم</label>
+                        <input type="text" id="username" placeholder="اكتب اسمك هنا">
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="password" placeholder="كلمة السر">
+                    </div>
+                    <button onclick="login()" style="margin-top: 10px; padding: 16px;">دخول</button>
+                    <div id="loginStatus" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+
+            <!-- لوحة المدير -->
+            <div id="adminPanel" style="display: none;">
+                <div style="background: rgba(0, 255, 136, 0.1); padding: 25px; border-radius: 20px; border: 2px solid #00ff88; margin-bottom: 30px;">
+                    <h3 class="neon-text" style="color: #00ff88 !important;">👑 مدير النظام - لوحة التحكم</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+                        <button onclick="toggleAddGame()" style="flex: 1; padding: 15px;">➕ إضافة لعبة</button>
+                        <button onclick="toggleAddAd()" style="flex: 1; padding: 15px;">📢 إدارة الإعلانات</button>
+                        <button onclick="toggleEditSalawat()" style="flex: 1; padding: 15px; background: linear-gradient(45deg, #ffaa00, #ff8800);">✍️ تعديل الصلاة</button>
+                        <button onclick="showChangeLog()" style="flex: 1; padding: 15px; background: linear-gradient(45deg, #9932cc, #8a2be2);">📋 سجل التغييرات</button>
+                        <button onclick="logout()" style="flex: 1; padding: 15px; background: linear-gradient(45deg, #ff4757, #ff3838);">🚪 خروج</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- سجل التغييرات -->
+            <div id="changeLogModal" style="display: none; background: rgba(20, 20, 50, 0.95); padding: 30px; border-radius: 20px; border: 2px solid #9932cc; margin-bottom: 30px;">
+                <h3 class="neon-text" style="color: #9932cc !important; margin-bottom: 25px;">📋 سجل التغييرات</h3>
+                <div id="changeLogContent" style="max-height: 400px; overflow-y: auto; background: rgba(10, 10, 26, 0.8); padding: 20px; border-radius: 15px; font-size: 14px; line-height: 1.7;"></div>
+                <button onclick="hideChangeLog()" style="margin-top: 20px; background: linear-gradient(45deg, #ff4757, #ff3838);">إغلاق</button>
+            </div>
+
+            <!-- إضافة لعبة -->
+            <div id="addGameForm" style="display: none;">
+                <div style="background: rgba(0, 212, 255, 0.1); padding: 30px; border-radius: 20px; border: 2px solid #00d4ff; margin-bottom: 30px;">
+                    <h4 class="neon-text" style="margin-bottom: 25px;">➕ إضافة لعبة جديدة</h4>
+                    <div class="form-group">
+                        <label>اسم اللعبة</label>
+                        <input type="text" id="gameName" placeholder="مثال: GTA V">
+                    </div>
+                    <div class="form-group">
+                        <label>رابط الصورة</label>
+                        <input type="url" id="gameImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>رابط التحميل</label>
+                        <input type="url" id="gameDownload" placeholder="https://download.com/game.exe">
+                    </div>
+                    <div class="form-group">
+                        <label>المواصفات</label>
+                        <textarea id="gameSpecs" rows="4" placeholder="CPU: i5 | RAM: 8GB | GPU: GTX 1060..."></textarea>
+                    </div>
+                    <button onclick="addGame()">✅ إضافة اللعبة</button>
+                </div>
+            </div>
+
+            <!-- الألعاب -->
+            <div id="gamesContainer" class="games-grid"></div>
+            <div id="status"></div>
+        </main>
+
+        <!-- الشريط الجانبي الأيسر -->
+        <aside class="sidebar" id="leftSidebar">
+            <h3 style="color: #00ff88;">🎁 عروض خاصة</h3>
+            <div id="leftAdsContainer"></div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer neon-glow">
+        <div id="editSalawatForm" style="display: none; max-width: 800px; margin: 0 auto 20px;">
+            <div class="form-group">
+                <label>نص الصلاة على النبي</label>
+                <textarea id="salawatTextEdit" placeholder="اكتب الصلاة هنا..." style="min-height: 120px; font-size: 1.1rem;"></textarea>
+            </div>
+            <button onclick="saveSalawat()">💾 حفظ التعديل</button>
+            <button onclick="cancelEditSalawat()" style="background: #666; margin-top: 10px;">❌ إلغاء</button>
+        </div>
+        
+        <div id="salawatContainer">
+            <div class="salawat-text" id="salawatText">
+                اللهم صل وسلم وبارك على سيدنا محمد وعلى آله وصحبه أجمعين<br><br>
+                اللهم صل على سيدنا محمد الفاتح لما أغلق والخاتم لما سبق ناصر الحق بالحق والهادي إلى صراطك المستقيم وعلى آله حق قدره ومقداره العظيم
+            </div>
+        </div>
+        
+        <h4 class="neon-text" style="margin-top: 30px;">Play Games © 2026</h4>
+    </footer>
+
+    <script>
+        // البيانات
+        let games = JSON.parse(localStorage.getItem('games')) || [];
+        let ads = JSON.parse(localStorage.getItem('ads')) || [];
+        let salawatText = localStorage.getItem('salawatText') || "اللهم صل وسلم وبارك على سيدنا محمد وعلى آله وصحبه أجمعين\n\nاللهم صل على سيدنا محمد الفاتح لما أغلق والخاتم لما سبق ناصر الحق بالحق والهادي إلى صراطك المستقيم وعلى آله حق قدره ومقداره العظيم";
+        let changeLog = JSON.parse(localStorage.getItem('changeLog')) || [];
+        let usersLog = JSON.parse(localStorage.getItem('usersLog')) || [];
+        let isAdmin = localStorage.getItem('isAdmin') === 'true';
+        let currentUser = localStorage.getItem('currentUser') || '';
+
+        // تحديث النصوص
+        document.getElementById('salawatText').textContent = salawatText.replace(/\n/g, '\n');
+
+        // تسجيل أي تغيير
+        function logChange(action, details = '') {
+            if (!isAdmin) return; // المدير بس يسجل التغييرات
+            
+            const logEntry = {
+                id: Date.now(),
+                timestamp: new Date().toLocaleString('ar-EG'),
+                action: action,
+                user: currentUser,
+                details: details
+            };
+            changeLog.unshift(logEntry);
+            localStorage.setItem('changeLog', JSON.stringify(changeLog.slice(0, 100)));
+            updateStats();
+        }
+
+        // تسجيل مستخدم جديد
+        function logUserLogin(username, isAdminLogin) {
+            const userEntry = {
+                id: Date.now(),
+                timestamp: new Date().toLocaleString('ar-EG'),
+                username: username,
+                isAdmin: isAdminLogin
+            };
+            usersLog.unshift(userEntry);
+            localStorage.setItem('usersLog', JSON.stringify(usersLog.slice(0, 50)));
+            updateStats();
+        }
+
+        // عرض الإحصائيات (مدير فقط)
+        function updateStats() {
+            if (!isAdmin) return;
+            
+            const totalGames = games.length;
+            const totalAds = ads.length;
+            const totalLogins = usersLog.length;
+            const totalChanges = changeLog.length;
+            const onlineUsers = new Set(usersLog.slice(0, 10).map(u => u.username)).size;
+
+            document.getElementById('siteStats').innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${totalGames}</div>
+                    <div>الألعاب</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${totalAds}</div>
+                    <div>الإعلانات</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${totalLogins}</div>
+                    <div>إجمالي الدخول</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${onlineUsers}</div>
+                    <div>متصلين الآن</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${totalChanges}</div>
+                    <div>التغييرات</div>
+                </div>
+            `;
+        }
+
+        // تسجيل الدخول
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username) {
+                showStatus('❌ اكتب اسم المستخدم', 'error');
+                return;
+            }
+
+            if (username === 'kareem' && password === '192.168.1.1') {
+                isAdmin = true;
+                currentUser = username;
+                localStorage.setItem('isAdmin', 'true');
+                localStorage.setItem('currentUser', username);
+                logUserLogin(username, true);
+                showStatus('✅ تم تسجيل الدخول كمدير بنجاح!', 'success');
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('adminStats').style.display = 'block';
+                updateStats();
+            } else if (username && password) {
+                isAdmin = false;
+                currentUser = username;
+                localStorage.setItem('isAdmin', 'false');
+                localStorage.setItem('currentUser', username);
+                logUserLogin(username, false);
+                showStatus(`✅ مرحباً بك ${username}`, 'success');
+                document.getElementById('loginSection').style.display = 'none';
+            } else {
+                showStatus('❌ اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
+            }
+            renderGames();
+        }
+
+        // إضافة لعبة مع التسجيل
+        function addGame() {
+            const name = document.getElementById('gameName').value.trim();
+            const image = document.getElementById('gameImage').value.trim();
+            const download = document.getElementById('gameDownload').value.trim();
+            const specs = document.getElementById('gameSpecs').value.trim();
+
+            if (name && image && download && specs) {
+                const game = { id: Date.now(), name, image, download, specs };
+                games.unshift(game);
+                localStorage.setItem('games', JSON.stringify(games));
+                logChange('إضافة لعبة جديدة', `اسم اللعبة: ${name}`);
+                document.getElementById('addGameForm').style.display = 'none';
+                renderGames();
+                showStatus('🎮 تم إضافة اللعبة بنجاح!', 'success');
+                clearAddGameForm();
+            } else {
+                showStatus('❌ يرجى ملء جميع الحقول', 'error');
+            }
+        }
+
+        // باقي الوظائف نفسها...
+        function deleteGame(id) {
+            const gameName = games.find(g => g.id == id)?.name || 'غير معروف';
+            games = games.filter(game => game.id != id);
+            localStorage.setItem('games', JSON.stringify(games));
+            logChange('حذف لعبة', `اسم اللعبة: ${gameName}`);
+            renderGames();
+            showStatus('🗑️ تم حذف اللعبة بنجاح!', 'success');
+        }
+
+        function renderGames(filteredGames = games) {
+            const container = document.getElementById('gamesContainer');
+            if (filteredGames.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #888;"><h3 class="neon-text">لا توجد ألعاب حالياً</h3><p>ابدأ بإضافة أول لعبة 🎮</p></div>';
+                return;
+            }
+            container.innerHTML = filteredGames.map(game => `
+                <div class="game-card ${isAdmin ? 'admin' : ''}" onclick="showGameDetails(${JSON.stringify(game)})">
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteGame(${game.id})">×</button>
+                    <img src="${game.image}" alt="${game.name}" class="game-image" onerror="this.src='https://via.placeholder.com/320x180/1a1a2e/00d4ff?text=Game'">
+                    <h3 style="font-size: 1.4rem; margin-bottom: 12px; color: #fff;">${game.name}</h3>
+                    <a href="${game.download}" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: linear-gradient(45deg, #00ff88, #00d4ff); text-decoration: none; border-radius: 10px; font-weight: 600; margin-top: 15px;">📥 تحميل</a>
+                </div>
+            `).join('');
+        }
+
+        function searchGames() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = games.filter(game => game.name.toLowerCase().includes(query));
+            renderGames(filtered);
+        }
+
+        function showChangeLog() {
+            const content = changeLog.map(log => `
+                <div style="padding: 12px; border-bottom: 1px solid #333; font-size: 13px;">
+                    <strong>${log.timestamp}</strong> | 
+                    <span style="color: #00ff88;">${log.user}</span> | 
+                    <strong style="color: #00d4ff;">${log.action}</strong><br>
+                    <small>${log.details}</small>
+                </div>
+            `).join('');
+            
+            document.getElementById('changeLogContent').innerHTML = content || '<p style="color: #888; text-align: center;">لا توجد تغييرات بعد</p>';
+            document.getElementById('changeLogModal').style.display = 'block';
+        }
+
+        function hideChangeLog() {
+            document.getElementById('changeLogModal').style.display = 'none';
+        }
+
+        function toggleAddGame() {
+            document.getElementById('addGameForm').style.display = 
+                document.getElementById('addGameForm').style.display === 'none' ? 'block' : 'none';
+        }
+
+        function logout() {
+            logChange('خروج من النظام', `المستخدم: ${currentUser}`);
+            localStorage.removeItem('isAdmin');
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            const bgColor = type === 'success' ? 'rgba(0, 255, 136, 0.2)' : 'rgba(255, 71, 87, 0.2)';
+            const borderColor = type === 'success' ? '#00ff88' : '#ff4757';
+            const textColor = type === 'success' ? '#00ff88' : '#ff4757';
+            
+            status.innerHTML = `<div style="padding: 15px 20px; border-radius: 12px; margin: 20px 0; text-align: center; font-weight: 600; animation: pulse 0.6s ease; background: ${bgColor}; border: 2px solid ${borderColor}; color: ${textColor};">${message}</div>`;
+            setTimeout(() => status.innerHTML = '', 4000);
+        }
+
+        function clearAddGameForm() {
+            document.getElementById('gameName').value = '';
+            document.getElementById('gameImage').value = '';
+            document.getElementById('gameDownload').value = '';
+            document.getElementById('gameSpecs').value = '';
+        }
+
+        // تحميل البيانات
+        window.onload = () => {
+            if (isAdmin) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('adminStats').style.display = 'block';
+                updateStats();
+            }
+            renderGames();
+        };
+    </script>
+</body>
+</html>
